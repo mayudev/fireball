@@ -12,4 +12,3 @@ bin           = @["fireball"]
 
 requires "nim >= 1.6.12"
 requires "argparse >= 4.0.0"
-requires "zippy >= 0.10.10"

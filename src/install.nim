@@ -1,10 +1,12 @@
 import os, sugar
-import zippy/tarballs
-import std/strutils
-import parsers/cfg
-
-import error
+import std/strutils, std/options
 import path
+
+import parsers/desktop
+import util/archive
+import util/error
+import util/ask
+
 
 proc install*(path: string) =
     # validate file path
@@ -18,7 +20,8 @@ proc install*(path: string) =
     let dest = joinPath(appDir, filename)
 
     echo "extracting into ", dest
-    extractAll(path, dest)
+    createDir(dest)
+    extractInto(path, dest)
 
     # check for the true tarball root
     # (some tarballs are packaged like: archive.tar/Archive/*contents* and others
@@ -36,9 +39,33 @@ proc install*(path: string) =
         for k, p in walkDir(root):
             if k == pcFile: p
 
+    var executables: seq[(string, string)] = @[]
+    var desktop: Option[DesktopEntry]
+
     for file in dir:
         if file.endsWith(".desktop"):
             echo "desktop file found at ", file
             var entry = parseDesktopEntry(file)
-        elif getFilePermissions(file).contains(FilePermission.fpUserExec):
+            desktop = some(entry)
+        elif getFilePermissions(file).contains(FilePermission.fpUserExec) and
+                 not file.endsWith(".so"):
             echo "found executable ", file
+            executables.add((file, extractFilename(file)))
+
+    if desktop.isSome():
+        var entry = desktop.get()
+        var intendedExecFilename = extractFilename(entry.exec)
+
+        let found = collect:
+            for exec in executables:
+                if exec[1] == intendedExecFilename: exec
+
+        if found.len() > 0:
+            entry.setEntryExecutable(found[0][0])
+            var contents = entry.writeOut()
+
+            var desktopPath = joinPath(getUserApplicationPath(), filename & ".desktop")
+            writeFile(desktopPath, contents)
+            echo "installed desktop entry in ", desktopPath
+            echo "running desktop-file-validate on desktop entry, output:"
+            echo runValidate(desktopPath)

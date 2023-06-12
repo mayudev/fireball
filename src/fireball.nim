@@ -3,7 +3,7 @@ from std/strformat import fmt
 import argparse
 
 from install import install
-from error import CommandError
+from util/error import CommandError
 
 var parser = newParser:
     help("A package manager for tarballs")

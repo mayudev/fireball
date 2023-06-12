@@ -1,4 +1,7 @@
-import os, error, std/strutils
+import os, util/error, std/strutils
+
+let FIREBALL_PATH = getEnv("FIREBALL_PATH")
+let BINARY_PATH = getEnv("FIREBALL_BINARY_PATH")
 
 proc getSystemDataPath*(): string =
     if not existsEnv("HOME"):
@@ -8,7 +11,12 @@ proc getSystemDataPath*(): string =
             ".local/share"))
 
 proc getFireballDataPath(): string =
-    joinPath(getSystemDataPath(), "fireball")
+    if FIREBALL_PATH != "":
+        return FIREBALL_PATH
+    return joinPath(getSystemDataPath(), "fireball")
+
+proc getUserApplicationPath*(): string =
+    return joinPath(getSystemDataPath(), "applications")
 
 proc ensureDataPath*(): string =
     var path = getFireballDataPath()
