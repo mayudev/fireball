@@ -1,11 +1,13 @@
 import os, sugar
 import std/strutils, std/options
-import path
 
 import parsers/desktop
+import parsers/database
+
 import util/archive
 import util/error
 import util/ask
+import util/path
 
 
 proc install*(path: string) =
@@ -69,3 +71,12 @@ proc install*(path: string) =
             echo "installed desktop entry in ", desktopPath
             echo "running desktop-file-validate on desktop entry, output:"
             echo runValidate(desktopPath)
+
+    let appObject = Application(
+        name: filename,
+        desktopFile: "",
+        path: dest,
+        executables: @[],
+    )
+
+    addInstalledApp(appDir, appObject)

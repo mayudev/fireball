@@ -1,4 +1,4 @@
-import os, util/error, std/strutils
+import os, error, std/strutils
 
 let FIREBALL_PATH = getEnv("FIREBALL_PATH")
 let BINARY_PATH = getEnv("FIREBALL_BINARY_PATH")
