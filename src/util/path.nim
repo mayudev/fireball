@@ -7,8 +7,7 @@ proc getSystemDataPath*(): string =
     if not existsEnv("HOME"):
         raise CommandError.newException("$HOME environment variable not found")
 
-    return joinPath(getEnv("HOME"), getEnv("XDG_DATA_HOME",
-            ".local/share"))
+    return getEnv("XDG_DATA_HOME", joinPath("HOME", ".local/share"))
 
 proc getFireballDataPath(): string =
     if FIREBALL_PATH != "":
