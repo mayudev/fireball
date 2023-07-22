@@ -6,7 +6,6 @@ import parsers/database
 
 import util/archive
 import util/error
-import util/ask
 import util/path
 
 

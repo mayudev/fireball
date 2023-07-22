@@ -1,7 +1,7 @@
 import os, error, std/strutils
 
 let FIREBALL_PATH = getEnv("FIREBALL_PATH")
-let BINARY_PATH = getEnv("FIREBALL_BINARY_PATH")
+# let BINARY_PATH = getEnv("FIREBALL_BINARY_PATH")
 
 proc getSystemDataPath*(): string =
     if not existsEnv("HOME"):
