@@ -4,7 +4,7 @@ const filename = "fireball.json"
 
 type Application* = object
   name*: string
-  desktopFile*: string
+  desktopFile*: bool
   path*: string
   executables*: seq[string]
 

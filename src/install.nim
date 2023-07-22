@@ -74,9 +74,9 @@ proc install*(path: string) =
 
     let appObject = Application(
         name: filename,
-        desktopFile: "",
+        desktopFile: desktop.isSome(),
         path: dest,
-        executables: @[],
+        executables: if desktop.isSome(): @[] else: @[],
     )
 
     addInstalledApp(appDir, appObject)
